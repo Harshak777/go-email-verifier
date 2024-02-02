@@ -14,11 +14,13 @@ func main() {
 	fmt.Printf("Domain, hasMX, hasSPF, SPF Record, hasDMARC, DMARC Record \n")
 
 	for scanner.Scan() {
-		checkDomain(scanner.Text())
+		input := scanner.Text()
+		splitEmail := strings.Split(input, "@")
+		checkDomain(splitEmail[1])
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal("Could not read from input %v\n", err)
+		log.Fatal("Could not read from input, \n", err)
 	}
 }
 
@@ -29,7 +31,7 @@ func checkDomain(domain string) {
 	mxReords, err := net.LookupMX(domain)
 
 	if err != nil {
-		log.Fatal("Error, %v \n", err)
+		log.Fatal("Error, \n", err)
 	}
 
 	if len(mxReords) > 0 {
@@ -39,7 +41,7 @@ func checkDomain(domain string) {
 	txtRecords, err := net.LookupTXT(domain)
 
 	if err != nil {
-		log.Fatal("Error, %v \n", err)
+		log.Fatal("Error,\n", err)
 	}
 
 	for _, record := range txtRecords {
@@ -53,7 +55,7 @@ func checkDomain(domain string) {
 	dmarcRecords, err := net.LookupTXT("_dmarc." + domain)
 
 	if err != nil {
-		log.Fatal("Error, %v \n", err)
+		log.Fatal("Error,\n", err)
 	}
 
 	for _, record := range dmarcRecords {
